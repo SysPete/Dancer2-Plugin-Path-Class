@@ -13,7 +13,6 @@ use Dancer2::Core::MIME;
 use Path::Class;
 use Fcntl "S_IRUSR";
 use Format::Human::Bytes;
-use DateTime;
 
 sub _decorate_dirs {
     my ($dir, $dirs) = @_;
@@ -25,6 +24,7 @@ sub _decorate_dirs {
         while (my $ent = $subdir->next) {
             my $subsubname = $ent->basename;
             next if $subsubname =~ /^\./; # hidden
+            next if $subsubname =~ /~$/; # ignore
             next unless -r $ent; # can read
             if ($ent->is_dir) {
                 push @subdirs, $subsubname;
@@ -42,6 +42,13 @@ sub _decorate_dirs {
     return \@ls_dirs;
 }
 
+sub _ymd {
+    my $stamp = shift;
+    my ($mday, $mon, $year) = (localtime($stamp))[3..5];
+    my $date = sprintf("%4d-%02d-%02d", $year + 1900, $mon + 1, $mday);
+    return $date;
+}
+
 sub _decorate_files {
     my ($dir, $files) = @_;
     my @ls_files = ();
@@ -53,7 +60,7 @@ sub _decorate_files {
             name => $basename,
             type => mime->for_file($basename),
             size => Format::Human::Bytes::base2($st->size),
-            date => DateTime->from_epoch(epoch => $st->mtime)->ymd,
+            date => _ymd($st->mtime),
         };
     }
     return \@ls_files;

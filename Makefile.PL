@@ -18,7 +18,6 @@ WriteMakefile(
         'Path::Class'          => 0,
         'Fcntl'                => 0,
         'Format::Human::Bytes' => 0,
-        'DateTime'             => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Dancer2-Plugin-Path-Class-*' },
