@@ -45,14 +45,13 @@ sub _decorate_dirs {
 sub _decorate_files {
     my ($dir, $files) = @_;
     my @ls_files = ();
-    my $mime = Dancer2::Core::MIME->instance;
     for my $basename (@{$files}) {
         my $st = $dir->file($basename)->stat;
         next unless $st;
         next unless $st->cando(S_IRUSR, 1); # can read
         push @ls_files, {
             name => $basename,
-            type => $mime->for_file($basename),
+            type => mime->for_file($basename),
             size => Format::Human::Bytes::base2($st->size),
             date => DateTime->from_epoch(epoch => $st->mtime)->ymd,
         };
@@ -127,7 +126,7 @@ version 0.01
   get '/img/**' => sub {
       my ($path) = splat;
       my @splat = @{$path};
-      my $dir = ls(setting('public'), '/img', @splat);
+      my $dir = ls(config->{public_dir}, '/img', @splat);
       return template 'dirlisting' if -d $dir;
       send_file("$dir", system_path =>1);
   };
