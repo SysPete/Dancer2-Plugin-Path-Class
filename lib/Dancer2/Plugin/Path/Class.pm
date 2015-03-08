@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use 5.010001;
 
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 
 use Dancer2::Plugin;
 use Dancer2::Core::MIME;
@@ -50,7 +50,7 @@ sub _ymd {
 }
 
 sub _decorate_files {
-    my ($dir, $files) = @_;
+    my ($dsl, $dir, $files) = @_;
     my @ls_files = ();
     for my $basename (@{$files}) {
         my $st = $dir->file($basename)->stat;
@@ -58,7 +58,7 @@ sub _decorate_files {
         next unless $st->cando(S_IRUSR, 1); # can read
         push @ls_files, {
             name => $basename,
-            type => mime->for_file($basename),
+            type => $dsl->mime->for_file($basename),
             size => Format::Human::Bytes::base2($st->size),
             date => _ymd($st->mtime),
         };
@@ -90,10 +90,10 @@ register ls => sub {
         @dirs = sort {$a cmp $b} @dirs;
         $ls_dirs = _decorate_dirs($dir, \@dirs);
         @files = sort {$a cmp $b} @files;
-        $ls_files = _decorate_files($dir, \@files);
+        $ls_files = _decorate_files($dsl, $dir, \@files);
     } else {
         push @files, $dir->basename;
-        $ls_files = _decorate_files($dir->parent, \@files);
+        $ls_files = _decorate_files($dsl, $dir->parent, \@files);
     }
 
     my $ls_cdup = $dsl->request->path;
@@ -119,14 +119,14 @@ Dancer2::Plugin::Path::Class - list a directory using Path::Class
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 SYNOPSIS
 
   use Dancer2::Plugin::Path::Class;
   
   get '/img' => sub {
-      my $dir = ls(setting('public'), '/img');
+      my $dir = ls(config->{public_dir}, '/img');
       template 'dirlisting';
   };
   
