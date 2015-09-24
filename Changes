@@ -1,5 +1,9 @@
 Revision history for Dancer2-Plugin-Path-Class
 
+0.03	2015-09-24
+	Remove $dsl->mime , use MIME::Types
+	TODO: remove $dsl->request and $dsl->var
+
 0.02	2015-03-08
 	keyword 'mime' must be called as '$dsl->mime'
 

@@ -6,10 +6,10 @@ use strict;
 use warnings;
 use 5.010001;
 
-our $VERSION = 0.02;
+our $VERSION = 0.03;
 
 use Dancer2::Plugin;
-use Dancer2::Core::MIME;
+use MIME::Types;
 use Path::Class;
 use Fcntl "S_IRUSR";
 use Format::Human::Bytes;
@@ -50,15 +50,17 @@ sub _ymd {
 }
 
 sub _decorate_files {
-    my ($dsl, $dir, $files) = @_;
+    my ($dir, $files) = @_;
     my @ls_files = ();
+    my $mt = MIME::Types->new;
     for my $basename (@{$files}) {
         my $st = $dir->file($basename)->stat;
         next unless $st;
         next unless $st->cando(S_IRUSR, 1); # can read
+        my $type = $mt->mimeTypeOf($basename);
         push @ls_files, {
             name => $basename,
-            type => $dsl->mime->for_file($basename),
+            type => "$type",
             size => Format::Human::Bytes::base2($st->size),
             date => _ymd($st->mtime),
         };
@@ -90,10 +92,10 @@ register ls => sub {
         @dirs = sort {$a cmp $b} @dirs;
         $ls_dirs = _decorate_dirs($dir, \@dirs);
         @files = sort {$a cmp $b} @files;
-        $ls_files = _decorate_files($dsl, $dir, \@files);
+        $ls_files = _decorate_files($dir, \@files);
     } else {
         push @files, $dir->basename;
-        $ls_files = _decorate_files($dsl, $dir->parent, \@files);
+        $ls_files = _decorate_files($dir->parent, \@files);
     }
 
     my $ls_cdup = $dsl->request->path;
@@ -126,14 +128,14 @@ version 0.02
   use Dancer2::Plugin::Path::Class;
   
   get '/img' => sub {
-      my $dir = ls(config->{public_dir}, '/img');
+      my $dir = ls(config->{public}, '/img');
       template 'dirlisting';
   };
   
   get '/img/**' => sub {
       my ($path) = splat;
       my @splat = @{$path};
-      my $dir = ls(config->{public_dir}, '/img', @splat);
+      my $dir = ls(config->{public}, '/img', @splat);
       return template 'dirlisting' if -d $dir;
       send_file("$dir", system_path =>1);
   };
