@@ -13,6 +13,12 @@ WriteMakefile(
     ($ExtUtils::MakeMaker::VERSION >= 6.48
       ? ( LICENSE => q{perl})
       : ()),
+    BUILD_REQUIRES   => {
+        'Test::More'            => 0,
+        'HTTP::Request::Common' => 0,
+        'Path::Tiny'            => 0,
+        'Plack'                 => '1.0029', # Plack::Test OO interface
+    },
     PREREQ_PM => {
         'Dancer2'              => 0.158000,
         'Path::Class'          => 0,
