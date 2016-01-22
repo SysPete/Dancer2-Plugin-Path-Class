@@ -4,9 +4,8 @@ package Dancer2::Plugin::Path::Class;
 
 use strict;
 use warnings;
-use 5.010001;
 
-our $VERSION = 0.03;
+our $VERSION = 0.04;
 
 use Dancer2::Plugin;
 use MIME::Types;
@@ -121,7 +120,7 @@ Dancer2::Plugin::Path::Class - list a directory using Path::Class
 
 =head1 VERSION
 
-version 0.02
+version 0.04
 
 =head1 SYNOPSIS
 
@@ -184,6 +183,10 @@ or ending with a tilde ('~') are ignored.
 =head1 AUTHOR
 
 Henk van Oers, HVOERS@cpan.org
+
+=head1 CONTRIBUTORS
+
+    Peter Mottram
 
 =head1 COPYRIGHT and LICENSE
 
