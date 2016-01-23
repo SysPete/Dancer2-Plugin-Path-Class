@@ -5,7 +5,7 @@ package Dancer2::Plugin::Path::Class;
 use strict;
 use warnings;
 
-our $VERSION = 0.04;
+our $VERSION = 0.05;
 
 use Dancer2::Plugin;
 use MIME::Types;
@@ -120,7 +120,7 @@ Dancer2::Plugin::Path::Class - list a directory using Path::Class
 
 =head1 VERSION
 
-version 0.04
+version 0.05
 
 =head1 SYNOPSIS
 
