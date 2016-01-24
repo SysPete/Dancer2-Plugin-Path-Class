@@ -1,5 +1,8 @@
 Revision history for Dancer2-Plugin-Path-Class
 
+0.06	2016-01-24
+	Make it work for older perls (5.008)
+
 0.05	2016-01-23
 	Add MIME::Types to PREREQ_PM
 	TODO: Fix 'make test' on Windows

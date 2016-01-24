@@ -21,7 +21,6 @@ WriteMakefile(
     PREREQ_PM => {
         'Dancer2'              => 0.166000,
         'Path::Class'          => 0,
-        'Fcntl'                => 0,
         'Format::Human::Bytes' => 0,
         'MIME::Types'          => 0,
     },

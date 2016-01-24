@@ -5,12 +5,11 @@ package Dancer2::Plugin::Path::Class;
 use strict;
 use warnings;
 
-our $VERSION = 0.05;
+our $VERSION = 0.06;
 
 use Dancer2::Plugin;
 use MIME::Types;
 use Path::Class;
-use Fcntl "S_IRUSR";
 use Format::Human::Bytes;
 
 sub _decorate_dirs {
@@ -53,9 +52,10 @@ sub _decorate_files {
     my @ls_files = ();
     my $mt = MIME::Types->new;
     for my $basename (@{$files}) {
-        my $st = $dir->file($basename)->stat;
-        next unless $st;
-        next unless $st->cando(S_IRUSR, 1); # can read
+        my $file = $dir->file($basename);
+        next unless -r $file; # can read
+        my $st = $file->stat;
+        next unless $st; # can stat
         my $type = $mt->mimeTypeOf($basename);
         push @ls_files, {
             name => $basename,
@@ -120,7 +120,7 @@ Dancer2::Plugin::Path::Class - list a directory using Path::Class
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 SYNOPSIS
 
