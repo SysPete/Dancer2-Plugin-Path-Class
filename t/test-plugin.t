@@ -57,7 +57,7 @@ subtest 'get /public' => sub {
     is $res->code, 200, "get /public code is 200";
 
     is $res->content,
-      join( ",", $public_dir->absolute, 'public,3,0' ),
+      join( ",", $public_dir->absolute->canonpath, 'public,3,0' ),
       "content is correct";
 
 };
@@ -71,7 +71,7 @@ subtest 'get /img' => sub {
 
     is $res->code, 200, "get /img code is 200";
 
-    is $res->content,
-      join( ",", $img_dir->absolute, 'img,0,3' ), "content is correct";
+    is $res->content, join( ",", $img_dir->absolute->canonpath, 'img,0,3' ),
+      "content is correct";
 
 };
